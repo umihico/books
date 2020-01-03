@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class createUser extends Command
 {
@@ -11,14 +14,14 @@ class createUser extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'command:createUser {--username=} {--password=}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'takes option --username and --password';
 
     /**
      * Create a new command instance.
@@ -38,5 +41,11 @@ class createUser extends Command
     public function handle()
     {
         //
+        $user = new User();
+        $user->password = Hash::make($this->option('password'));
+        $user->email = 'umihico@users.noreply.github.com';
+        $user->name = $this->option('username');
+        $user->api_token = Str::random(60);
+        $user->save();
     }
 }
